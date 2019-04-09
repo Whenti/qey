@@ -4,6 +4,8 @@ import string
 import random
 from configparser import ConfigParser
 
+current_dir = os.path.dirname(os.path.abspath(__file__))
+
 #basic of autokey file
 folder_json = """{
     "usageCount": 0,
