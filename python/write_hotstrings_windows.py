@@ -9,30 +9,19 @@ START = """\ufeff
 #Hotstring EndChars ,?!`n `t
 #InputLevel, 1
 
-:o::day.::
-FormatTime, CurrentDateTime,, yyyy.MM.dd
-SendInput %CurrentDateTime% `
-return
-:o::day_::
-FormatTime, CurrentDateTime,, yyyy_MM_dd
-SendInput %CurrentDateTime% `
-return
-:o::day::
+:o?::day::
 FormatTime, CurrentDateTime,, yyyy/MM/dd
-SendInput %CurrentDateTime% `
+SendInput %CurrentDateTime%
 return
 
-:o::hour::
+:o?::hour::
 FormatTime, CurrentDateTime,, HH:mm
-SendInput %CurrentDateTime% `
+SendInput %CurrentDateTime%
 return
-:o::hour_::
-FormatTime, CurrentDateTime,, HH_mm
-SendInput %CurrentDateTime% `
-return
-:o::hour.::
-FormatTime, CurrentDateTime,, HH.mm
-SendInput %CurrentDateTime% `
+
+:o?::time::
+FormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm-ss
+SendInput %CurrentDateTime%
 return
 
 """
