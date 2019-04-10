@@ -19,8 +19,6 @@ pre_mv =
 
 CONSOLE := "VirtualConsoleClass"
 
-readHotstrings()
-
 Hotkey,!`,,Virgule
 Hotkey,!:,DeuxPoints
 Hotkey,!+`,,SVirgule
@@ -60,34 +58,6 @@ createGui:
     WinSet, TransColor, F1ECED 200, ahk_id %k_ID%
     WinSet, AlwaysOnTop, On, ahk_id %k_ID%
     Gui, Hide
-return
-
-;#################### hotkeys
-
-:o::day.::
-FormatTime, CurrentDateTime,, yyyy.MM.dd
-SendInput %CurrentDateTime% `
-return
-:o::day_::
-FormatTime, CurrentDateTime,, yyyy_MM_dd
-SendInput %CurrentDateTime% `
-return
-:o::day::
-FormatTime, CurrentDateTime,, yyyy/MM/dd
-SendInput %CurrentDateTime% `
-return
-
-:o::hour::
-FormatTime, CurrentDateTime,, HH:mm
-SendInput %CurrentDateTime% `
-return
-:o::hour_::
-FormatTime, CurrentDateTime,, HH_mm
-SendInput %CurrentDateTime% `
-return
-:o::hour.::
-FormatTime, CurrentDateTime,, HH.mm
-SendInput %CurrentDateTime% `
 return
 
 ;#################### hotstrings
