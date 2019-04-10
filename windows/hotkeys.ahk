@@ -19,26 +19,13 @@ pre_mv =
 
 CONSOLE := "VirtualConsoleClass"
 
-Hot_keys := []
-Hot_values := []
-Hot_count := {}
-
 readHotstrings()
 
 Hotkey,!`,,Virgule
 Hotkey,!:,DeuxPoints
 Hotkey,!+`,,SVirgule
 Hotkey,!+:,SDeuxPoints
-    
-k:=Hot_keys.MaxIndex()
-Loop, %k%
-{
-    key := Hot_keys[A_Index]
-    hot:=":?oC:" key
-    value:=Hot_values[A_Index]
-    Hotstring(hot,value,On)
-}
-    
+
 return
 
 #include %A_ScriptDir%\guihides.ahk
@@ -61,7 +48,7 @@ createGui:
     Gui, Font, s10 cFFFFFF Bold, Verdana
     Gui, -Caption +E0x200 +ToolWindow
     Gui, Color, 0x4D4D4D
-    Gui, Add, Text, vText, %text% 
+    Gui, Add, Text, vText, %text%
     Gui, Show
     WinGet, k_ID, ID, A
     WinSetTitle, ahk_id %k_ID%,,__Qey__
@@ -75,112 +62,6 @@ createGui:
     Gui, Hide
 return
 
-createHotstrings(ByRef Hots, ByRef tab, ByRef pref, ch = False)
-{
-	local hot
-	For key, value in tab
-	{	
-        if(ch)
-        {
-            value := strReplace(value, "__DB__", "C:\Users\Whenti\Dropbox")
-        }
-        value := strReplace(value,"/","\")
-        Hots:=Hots "§"  pref key value
-	}
-}
-
-addBaseHotstrings(ByRef Hots, filename =0)
-{
-    FileRead, s, %filename%
-    Loop, Parse, s, `n`r, %A_Space%%A_Tab%
-    {
-        c := SubStr(A_LoopField, 1, 1)
-        if(A_LoopField = "")
-            continue
-        else if (c="[")
-            continue
-        else 
-        {
-            Hots:=Hots "§:" A_LoopField
-        }
-    }
-}
-
-ReadIni( filename = 0 )
-{
-Local s, c, p, key, k
-
-	if not filename
-		filename := SubStr( A_ScriptName, 1, -3 ) . "ini"
-
-	FileRead, s, %filename%
-
-	Loop, Parse, s, `n`r, %A_Space%%A_Tab%
-	{
-		c := SubStr(A_LoopField, 1, 1)
-		if (c="[")
-			key := SubStr(A_LoopField, 2, -1)
-		else if (c=";")
-			continue
-		else {
-			p := InStr(A_LoopField, "=")
-			if p {
-				k := SubStr(A_LoopField, 1, p-1)
-				%key%[k] := SubStr(A_LoopField, p+1)
-			}
-		}
-	}
-}
-
-readHotstrings( filename = 0 )
-{
-Local s, c, p, k
-    
-    Hots:=[]
-    a_windows:={}
-    i:={}
-    d:={}
-    d_windows:={}
-    f:={}
-    f_windows:={}
-    v:={}
-    
-    readIni("..\data\data.ini")
-    createHotstrings(Hots, a_windows,"a:")
-    createHotstrings(Hots, i,"i:")
-    createHotstrings(Hots, d,"d:", True)
-    createHotstrings(Hots, d_windows,"d:")
-    createHotstrings(Hots, f,"f:", True)
-    createHotstrings(Hots, f_windows,"f:")
-    createHotstrings(Hots, v,"v:")
-    
-    addBaseHotstrings(Hots, "..\data\hotstrings.ini")
-    
-    Hots:=SubStr(Hots,2)
-    Sort, Hots, R F Hotsort D§
-    Hots := StrSplit(Hots , "§")
-    for index, value in Hots
-    {
-        p := InStr(value, " ")
-        a := SubStr(value, 1, p-1)
-        b := SubStr(value, p+1)
-        StringLower, c, a
-        Hot_keys.Push(a)
-        Hot_values.Push(b)
-    }
-}
-Hotsort(w1, w2)
-{
-    p1 := InStr(w1, " ")
-    key1 := SubStr(w1, 1, p1-1)
-    p2 := InStr(w2, " ")
-    key2 := SubStr(w2, 1, p2-1)
-    a1 := StrLen(key1)
-    a2 := StrLen(key2)
-    return a1 > a2 ? -1 : a1 < a2 ? 1 : 0
-}
-
-    
 ;#################### hotkeys
 
 :o::day.::
@@ -289,7 +170,7 @@ $^e::
     }
     Send, ^e
     return
-    
+
 $^l::
     WinGetClass, class, A
     if(class="PX_WINDOW_CLASS")
@@ -309,7 +190,7 @@ $^l::
     Else
         Send ^l
     return
-    
+
 ;----------------------------LAYOUT (normal maj ralt)
 $²::Send {Escape}
 $+&::Send ‽

@@ -2,6 +2,9 @@ import sys
 import subprocess
 import os
 from shutil import copyfile
+
+sys.path.append('python')
+
 from start import *
 
 current_path = os.path.dirname(os.path.abspath(__file__))
@@ -37,7 +40,7 @@ if sys.platform in ['linux', 'linux2']:
 #QEY_START
 python3 {}
 #QEY_END
-    """.format(os.path.join(current_path,"start.py"))
+""".format(os.path.join(current_path,"python","start.py"))
     addLines("{}/.profile".format(os.environ['HOME']), content_flag, add_profile)
 
 else:
@@ -45,7 +48,7 @@ else:
     from win32com.shell import shell, shellcon
     startup_dir = shell.SHGetFolderPath(0,shellcon.CSIDL_STARTUP,0,0)
     with open(os.path.join(startup_dir,"start_qey.bat"),"w",encoding='utf-8') as f:
-        file_to_start = os.path.join(current_path,'start.py')
+        file_to_start = os.path.join(current_path,"python","start.py")
         f.write("python {}".format(file_to_start))
 
 start()
