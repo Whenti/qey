@@ -4,7 +4,7 @@ import re
 import stat
 
 #basic of autokey file
-json_folder_content = """{
+folder_json = """{
     "usageCount": 0,
     "abbreviation": {
         "wordChars": "[^ \\\\r\\\\n]",
@@ -28,7 +28,7 @@ json_folder_content = """{
 }
 """
 
-json_content = """{{
+base = """{{
     "usageCount": 0,
     "omitTrigger": true,
     "prompt": false,
@@ -51,14 +51,18 @@ json_content = """{{
         1
     ],
     "showInTrayMenu": false,
-    "matchCase": false,
+    "matchCase": true,
     "filter": {{
         "regex": null,
         "isRecursive": false
     }},
-    "type": "phrase",
-    "sendMode": "<ctrl>+v"
-}}
+    "type": "script",
+    "store" : {{}}
+}}"""
+
+base_python = """
+clipboard.fill_clipboard(u"{rep}")
+keyboard.send_keys('<ctrl>+v')
 """
 
 HOTSTRINGS_DIR = os.path.join(os.environ['HOME'],".config","autokey","data","abbr_scripts")
@@ -67,13 +71,13 @@ HOTSTRINGS_DIR = os.path.join(os.environ['HOME'],".config","autokey","data","abb
 def create_hotkey(abr, rep, idx):
     abr = abr.replace('"', '\\"')
     rep = rep.replace('"', '\\"')
-    txt_file = os.path.join(HOTSTRINGS_DIR,"{}.txt".format(idx))
+    py_file = os.path.join(HOTSTRINGS_DIR,"{}.py".format(idx))
     json_file = os.path.join(HOTSTRINGS_DIR,".{}.json".format(idx))
-    with open(txt_file, "w+", encoding = "utf-8") as f:
-        f.write(rep)
-    os.chmod(txt_file, 0o777)
+    with open(py_file, "w+", encoding = "utf-8") as f:
+        f.write(base_python.format(rep = rep))
+    os.chmod(py_file, 0o777)
     with open(json_file, "w+", encoding = "utf-8") as f:
-        f.write(json_content.format(abr = abr , idx = idx))
+        f.write(base.format(abr = abr , idx = idx))
     os.chmod(json_file, 0o777)
 
 def write_hotstrings(dico):
@@ -86,7 +90,7 @@ def write_hotstrings(dico):
     #recreate folder_json
     FOLDER = os.path.join(HOTSTRINGS_DIR,".folder.json")
     with open(FOLDER, "w+", encoding = 'utf-8') as f:
-        f.write(json_folder_content)
+        f.write(folder_json)
     os.chmod(FOLDER, 0o777)
 
     #read my hotstrings

@@ -9,7 +9,7 @@ def start():
     set_hotstrings()
 
     if sys.platform in ['linux', 'linux2']:
-        subprocess.call('autokey &', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        subprocess.call('python3 ~/.local/bin/autokey-gtk &', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         hotkeys = os.path.join(QEY_PATH, 'windows', 'hotkeys.ahk')
         subprocess.call('open {}'.format(hotkeys),shell=True)
