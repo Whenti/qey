@@ -34,7 +34,7 @@ json_content = """{{
     "prompt": false,
     "description": "{idx}",
     "abbreviation": {{
-        "wordChars": "[^ \\\\r\\\\n]",
+        "wordChars": "[\\\\w]",
         "abbreviations": [
             "{abr}"
         ],

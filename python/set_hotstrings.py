@@ -4,16 +4,19 @@ import re
 import sys
 from _reader import *
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-DATA = os.path.join(current_dir, "..", "data")
-CONFIG = read_json(os.path.join(current_dir, "..", "config.json"))
-
+HOME = os.path.expanduser("~")
+CONFIG_PATH = os.path.join(HOME,'.config','qey','config.json')
+PYQO_PATH = os.path.join(HOME,'.config','pyqo')
 whitespace_except_space = string.whitespace.replace(" ", "")
 
-PATHS = list(CONFIG.values())
-HOTSTRINGS = {}
+PATHS = []
+if os.path.isdir(PYQO_PATH):
+    PATHS.append(PYQO_PATH)
+config_data = read_json(CONFIG_PATH)
+PATHS = PATHS + config_data["PATHS"]
 
 def set_hotstrings():
+    HOTSTRINGS = {}
     for PATH in PATHS:
         files = os.listdir(PATH)
         pattern_json = re.compile('^.*json$')
