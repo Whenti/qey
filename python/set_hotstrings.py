@@ -13,7 +13,8 @@ PATHS = []
 if os.path.isdir(PYQO_PATH):
     PATHS.append(PYQO_PATH)
 config_data = read_json(CONFIG_PATH)
-PATHS = PATHS + config_data["PATHS"]
+if "PATHS" in config_data:
+    PATHS = PATHS + config_data["PATHS"]
 
 def set_hotstrings():
     HOTSTRINGS = {}

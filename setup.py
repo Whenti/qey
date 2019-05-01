@@ -10,8 +10,8 @@ from start import *
 current_path = os.path.dirname(os.path.abspath(__file__))
 
 HOME = os.path.expanduser("~")
-CONFIG = os.path.join(HOME,'.config')
-QEY_PATH = os.path.join(CONFIG,'qey')
+CONFIG_PATH = os.path.join(HOME,'.config')
+QEY_PATH = os.path.join(CONFIG_PATH,'qey')
 
 if not os.path.isdir(CONFIG_PATH):
     os.mkdir(CONFIG_PATH)

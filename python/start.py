@@ -12,10 +12,10 @@ def start():
         subprocess.call('python3 ~/.local/bin/autokey-gtk &', shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         hotkeys = os.path.join(QEY_PATH, 'windows', 'hotkeys.ahk')
-        subprocess.call('open {}'.format(hotkeys),shell=True)
+        subprocess.call('start "" "{}"'.format(hotkeys),shell=True)
         hotstrings = os.path.join(QEY_PATH, 'windows', 'hotstrings.ahk')
         if os.path.isfile(hotstrings):
-            subprocess.call('open {}'.format(hotstrings),shell=True)
+            subprocess.call('start "" "{}"'.format(hotstrings),shell=True)
 
 
 if __name__ == "__main__":
