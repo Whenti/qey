@@ -5,11 +5,12 @@ import sys
 from _reader import *
 
 HOME = os.path.expanduser("~")
+QEY_PATH = os.path.join(HOME,'.config','qey')
 CONFIG_PATH = os.path.join(HOME,'.config','qey','config.json')
 PYQO_PATH = os.path.join(HOME,'.config','pyqo')
 whitespace_except_space = string.whitespace.replace(" ", "")
 
-PATHS = []
+PATHS = [QEY_PATH]
 if os.path.isdir(PYQO_PATH):
     PATHS.append(PYQO_PATH)
 config_data = read_json(CONFIG_PATH)
