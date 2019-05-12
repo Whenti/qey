@@ -141,26 +141,6 @@ $^e::
     Send, ^e
     return
 
-$^l::
-    WinGetClass, class, A
-    if(class="PX_WINDOW_CLASS")
-        Send, ^b
-    else if(class="wxWindowClassNR")
-        Send, {F9}
-    else if(class="CabinetWClass")
-    {
-        ControlFocus, ToolbarWindow322, A
-        Send, {Space}
-    }
-    else if(class="#32770")
-    {
-        ControlFocus, ToolbarWindow323, A
-        Send, {Space}
-    }
-    Else
-        Send ^l
-    return
-
 ;----------------------------LAYOUT (normal maj ralt)
 $²::Send {Escape}
 $+&::Send ‽
