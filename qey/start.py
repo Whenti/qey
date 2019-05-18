@@ -5,14 +5,6 @@ import subprocess
 import string
 import json
 
-CURR_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-os.chdir(CURR_PATH)
-
-HOTCHAR = ':'
-
-HOME = os.path.expanduser("~")
-QEY_PATH = os.path.join(HOME,'.config','qey')
-PYQO_PATH = os.path.join(HOME,'.config','pyqo')
 whitespace_except_space = string.whitespace.replace(" ", "")
 
 def read_json(filename):
@@ -24,10 +16,10 @@ def read_json(filename):
 	return data
 
 def get_hotstrings():
-	PATHS = [QEY_PATH]
-	if os.path.isdir(PYQO_PATH):
-		PATHS.append(PYQO_PATH)
-	config_data = read_json(os.path.join(QEY_PATH, 'config.json'))
+	PATHS = [CONFIG_QEY_PATH]
+	if os.path.isdir(CONFIG_PYQO_PATH):
+		PATHS.append(CONFIG_PYQO_PATH)
+	config_data = read_json(os.path.join(CONFIG_QEY_PATH, 'config.json'))
 	if "PATHS" in config_data:
 		PATHS = PATHS + config_data["PATHS"]
 
@@ -38,7 +30,7 @@ def get_hotstrings():
 	for PATH in PATHS:
 		files = os.listdir(PATH)
 		for file in files:
-			if PATH==QEY_PATH and file=="config.json":
+			if PATH==CONFIG_QEY_PATH and file=="config.json":
 				continue
 			#json files
 			if pattern_json.match(file):
@@ -85,17 +77,17 @@ def write_hotstrings(hotstrings, hotstring_file):
 
 def start():
 	hotstrings = get_hotstrings()
-	hotstring_file = os.path.join(QEY_PATH, 'hotstrings.ahk')
+	hotstring_file = os.path.join(CONFIG_QEY_PATH, 'hotstrings.ahk')
 	write_hotstrings(hotstrings, hotstring_file)
 
 	if sys.platform in ['linux', 'linux2']:
-		AUTOKEY_SIMPLE = os.path.join(CURR_PATH,"linux","autokey_simple.py")
-		cmd = 'python3 {autokey_simple} --verbose {file}'.format(autokey_simple=AUTOKEY_SIMPLE, file=hotstring_file)
+		AUTOKEY_SIMPLE = os.path.join(CURRENT_PATH,"linux","autokey_simple.py")
+		cmd = '{python} {autokey_simple} {file} &'.format(python = sys.executable, autokey_simple=AUTOKEY_SIMPLE, file=hotstring_file)
 		#subprocess.call(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 		subprocess.call(cmd, shell=True)
 	else:
 		#subprocess.call('start "" "{}"'.format(hotkeys),shell=True)
-		hotstrings = os.path.join(QEY_PATH, 'hotstrings.ahk')
+		hotstrings = os.path.join(CONFIG_QEY_PATH, 'hotstrings.ahk')
 		if os.path.isfile(hotstrings):
 			subprocess.call('start "" "{}"'.format(hotstrings),shell=True)
 

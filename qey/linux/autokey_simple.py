@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import argparse
 import collections
 import json
@@ -7,6 +6,7 @@ import os
 import signal
 import subprocess
 import sys
+import psutil
 from datetime import datetime
 
 import Xlib
@@ -16,7 +16,25 @@ import Xlib.display
 import Xlib.ext.record
 import Xlib.protocol
 
+HOME = os.path.expanduser("~")
+PIDS_PATH = os.path.join(HOME,'.config','qey','pids')
+MY_PID = os.path.join(PIDS_PATH, str(os.getpid()))
 
+if not os.path.isdir(PIDS_PATH):
+    os.mkdir(PIDS_PATH)
+
+for file in os.listdir(PIDS_PATH):
+    PID = int(file)
+    p = psutil.Process(PID)
+    p.terminate()
+
+os.mknod(MY_PID)
+
+def remove_pidfile():
+    os.remove(MY_PID)
+
+import atexit
+atexit.register(remove_pidfile)
 
 EXIT_FAILURE = 1
 RECORD_CONTEXT_ARGUMENTS = (
