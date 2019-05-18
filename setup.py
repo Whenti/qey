@@ -1,52 +1,58 @@
-import sys
-import subprocess
-import os
-from shutil import copyfile
 
-current_path = os.path.dirname(os.path.abspath(__file__))
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
-os.chdir(current_path)
-sys.path.append('qey')
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
 
-from start import start
+import re, os
+from qey import __version__
+from qey import __author__
+from qey import __email__
 
-HOME = os.path.expanduser("~")
-CONFIG_PATH = os.path.join(HOME,'.config')
-QEY_PATH = os.path.join(CONFIG_PATH,'qey')
-CONFIG_FILE = os.path.join(QEY_PATH,'config.json')
+QEY_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)),'qey')
 
-if not os.path.isdir(CONFIG_PATH):
-    os.mkdir(QEY_PATH)
-if not os.path.isdir(QEY_PATH):
-    os.mkdir(CONFIG_PATH)
-if not os.path.isfile(CONFIG_FILE):
-    with open(CONFIG_FILE,'w',encoding='utf-8') as f:
-        f.write('{"PATHS" : []}')
-    
+#commande
+COMMANDE = ['{c}=qey.{c}:main'.format(c=command) for command in COMMANDS]
 
-if sys.platform in ['linux', 'linux2']:
-    #make autokey start automatically
-    content_flag = "#QEY_START"
-    add_profile = """
-#QEY_START
-python3 {}
-#QEY_END
-""".format(os.path.join(current_path,"python","start.py"))
+#requirements
+def requirements():
+    with open('requirements.txt','r',encoding = 'utf-8') as f:
+        lines = f.readlines()
+        return [line.replace('==','>=').strip() for line in lines]
+REQUIREMENTS = requirements()
 
-    def addLines(filename, content, add):
-        with open(filename, "r+") as file:
-            for line in file:
-                if content in line:
-                    return
-            file.write(add)
-    addLines("{}/.profile".format(os.environ['HOME']), content_flag, add_profile)
+#readme
+with open('README.md', 'r', encoding = 'utf-8') as f:
+    README = '\n'.join(f.readlines())
 
-else:
-    #set starting script in shell:startup
-    from win32com.shell import shell, shellcon
-    startup_dir = shell.SHGetFolderPath(0,shellcon.CSIDL_STARTUP,0,0)
-    with open(os.path.join(startup_dir,"start_qey.bat"),"w",encoding='utf-8') as f:
-        file_to_start = os.path.join(current_path,"python","start.py")
-        f.write("python {}".format(file_to_start))
-
-start()
+#setup
+setup(
+    name='pyqo',
+    version=__version__,
+    description='Useful collection of command line scripts.',
+    long_description_content_type='text/markdown',
+    long_description=README,
+    author=__author__,
+    author_email=__email__,
+    url='https://github.com/Whenti/pyqo',
+    packages = ['pyqo'],
+    package_data={'pyqo': ['data/*.json']},
+    package_dir={'pyqo':'pyqo'},
+    include_package_data=True,
+    install_requires=REQUIREMENTS,
+    license='Apache License',
+    zip_safe=False,
+    keywords='pip requirements imports',
+    classifiers=[
+        'License :: OSI Approved :: MIT License',
+        'Programming Language :: Python :: 3.6',
+    ],
+    scripts = SCRIPTS,
+    entry_points={
+        'console_scripts': CONSOLE_SCRIPTS,
+    },
+)
+>>>>>>> oupsi

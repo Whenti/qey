@@ -5,14 +5,6 @@ import subprocess
 import string
 import json
 
-CURR_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)))
-os.chdir(CURR_PATH)
-
-HOTCHAR = ':'
-
-HOME = os.path.expanduser("~")
-QEY_PATH = os.path.join(HOME,'.config','qey')
-PYQO_PATH = os.path.join(HOME,'.config','pyqo')
 whitespace_except_space = string.whitespace.replace(" ", "")
 
 def read_json(filename):
@@ -24,40 +16,41 @@ def read_json(filename):
     return data
 
 def get_hotstrings():
-    PATHS = [QEY_PATH]
-    if os.path.isdir(PYQO_PATH):
-        PATHS.append(PYQO_PATH)
-    config_data = read_json(os.path.join(QEY_PATH, 'config.json'))
-    if "PATHS" in config_data:
-        PATHS = PATHS + config_data["PATHS"]
 
-    pattern_json = re.compile('^.*json$')
-    pattern_ini = re.compile('^.*ini$')
-    HOTSTRINGS = {}
+	PATHS = [CONFIG_QEY_PATH]
+	if os.path.isdir(CONFIG_PYQO_PATH):
+		PATHS.append(CONFIG_PYQO_PATH)
+	config_data = read_json(os.path.join(CONFIG_QEY_PATH, 'config.json'))
+	if "PATHS" in config_data:
+		PATHS = PATHS + config_data["PATHS"]
 
-    for PATH in PATHS:
-        files = os.listdir(PATH)
-        for file in files:
+	pattern_json = re.compile('^.*json$')
+	pattern_ini = re.compile('^.*ini$')
+	HOTSTRINGS = {}
+
+	for PATH in PATHS:
+		files = os.listdir(PATH)
+		for file in files:
             if file=="config.json":
                 continue
-            #json files
-            if pattern_json.match(file):
-                command = file[:-5]
-                json_data = read_json(os.path.join(PATH,file))
-                for key, value in json_data.items():
-                    HOTSTRINGS[command+':'+key] = value.strip(whitespace_except_space)
+			#json files
+			if pattern_json.match(file):
+				command = file[:-5]
+				json_data = read_json(os.path.join(PATH,file))
+				for key, value in json_data.items():
+					HOTSTRINGS[command+':'+key] = value.strip(whitespace_except_space)
 
-            #ini files
-            if pattern_ini.match(file):
-                with open(os.path.join(PATH, file), "r", encoding = 'utf-8') as f:
-                    for line in f:
-                        if line.strip()!="":
-                            line_ = line.split(" ")
-                            if line[0]!="[" and len(line_)>=2:
-                                string = (' '.join(line_[1:])).strip(whitespace_except_space)
-                                HOTSTRINGS[HOTCHAR+line_[0]]=string
+			#ini files
+			if pattern_ini.match(file):
+				with open(os.path.join(PATH, file), "r", encoding = 'utf-8') as f:
+					for line in f:
+						if line.strip()!="":
+							line_ = line.split(" ")
+							if line[0]!="[" and len(line_)>=2:
+								string = (' '.join(line_[1:])).strip(whitespace_except_space)
+								HOTSTRINGS[HOTCHAR+line_[0]]=string
 
-    return HOTSTRINGS
+	return HOTSTRINGS
 
 def write_hotstrings(hotstrings, hotstring_file):
         if sys.platform in ['linux', 'linux2']:
@@ -84,6 +77,7 @@ def write_hotstrings(hotstrings, hotstring_file):
                     f.write(':oC?:{key}::{value}\n'.format(key=key,value=value))
 
 def start():
+<<<<<<< HEAD
     hotstrings = get_hotstrings()
     hotstring_file = os.path.join(QEY_PATH, 'hotstrings.ahk')
     write_hotstrings(hotstrings, hotstring_file)
@@ -98,6 +92,22 @@ def start():
         AUTOHOTKEY = os.path.join(CURR_PATH,"linux","AutoHotkey.exe")
         cmd = 'start "{ahk}" "{file}"'.format(ahk = AUTOHOTKEY, file=hotstring_file)
         subprocess.call(cmd,shell=True)
+=======
+	hotstrings = get_hotstrings()
+	hotstring_file = os.path.join(CONFIG_QEY_PATH, 'hotstrings.ahk')
+	write_hotstrings(hotstrings, hotstring_file)
+
+	if sys.platform in ['linux', 'linux2']:
+		AUTOKEY_SIMPLE = os.path.join(CURRENT_PATH,"linux","autokey_simple.py")
+		cmd = '{python} {autokey_simple} {file} &'.format(python = sys.executable, autokey_simple=AUTOKEY_SIMPLE, file=hotstring_file)
+		#subprocess.call(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+		subprocess.call(cmd, shell=True)
+	else:
+		#subprocess.call('start "" "{}"'.format(hotkeys),shell=True)
+		hotstrings = os.path.join(CONFIG_QEY_PATH, 'hotstrings.ahk')
+		if os.path.isfile(hotstrings):
+			subprocess.call('start "" "{}"'.format(hotstrings),shell=True)
+>>>>>>> oupsi
 
 if __name__ == "__main__":
     start()
