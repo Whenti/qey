@@ -4,19 +4,11 @@ import os
 from .utils import *
 
 def setstartup():
-    if not os.path.isdir(CONFIG_PATH):
-        os.mkdir(CONFIG_PATH)
-    if not os.path.isdir(CONFIG_QEY_PATH):
-        os.mkdir(CONFIG_QEY_PATH)
-    if not os.path.isfile(CONFIG_FILE):
-        with open(CONFIG_FILE,'w',encoding='utf-8') as f:
-            f.write('{"PATHS" : []}')
-
     if sys.platform in ['linux', 'linux2']:
         content_flag = "#QEY_START"
         add_profile = """
 #QEY_START
-{python} {start}
+qey start
 #QEY_END
     """.format(python=sys.executable, start=os.path.join(CURRENT_PATH,"start.py"))
 
@@ -33,5 +25,4 @@ def setstartup():
         from win32com.shell import shell, shellcon
         startup_dir = shell.SHGetFolderPath(0,shellcon.CSIDL_STARTUP,0,0)
         with open(os.path.join(startup_dir,"start_qey.bat"),"w",encoding='utf-8') as f:
-            file_to_start = os.path.join(CURRENT_PATH,"start.py")
-            f.write("{python} {start}".format(python=sys.executable,start=file_to_start))
+            f.write("qey start")
