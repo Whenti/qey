@@ -5,9 +5,9 @@ from .utils import *
 
 def setstartup():
     if not os.path.isdir(CONFIG_PATH):
-        os.mkdir(QEY_PATH)
-    if not os.path.isdir(QEY_PATH):
         os.mkdir(CONFIG_PATH)
+    if not os.path.isdir(CONFIG_QEY_PATH):
+        os.mkdir(CONFIG_QEY_PATH)
     if not os.path.isfile(CONFIG_FILE):
         with open(CONFIG_FILE,'w',encoding='utf-8') as f:
             f.write('{"PATHS" : []}')
@@ -15,9 +15,9 @@ def setstartup():
     if sys.platform in ['linux', 'linux2']:
         content_flag = "#QEY_START"
         add_profile = """
-    #QEY_START
-    {python} {start}
-    #QEY_END
+#QEY_START
+{python} {start}
+#QEY_END
     """.format(python=sys.executable, start=os.path.join(CURRENT_PATH,"start.py"))
 
         def addLines(filename, content, add):

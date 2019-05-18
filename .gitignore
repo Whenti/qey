@@ -1,2 +1,6 @@
-__pycache__
-config.json
+pyqo/__pycache__/
+*.pyc
+pyqo.egg-info
+dist
+build
+.setup.py

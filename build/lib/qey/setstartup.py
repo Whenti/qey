@@ -5,9 +5,9 @@ from .utils import *
 
 def setstartup():
     if not os.path.isdir(CONFIG_PATH):
-        os.mkdir(QEY_PATH)
-    if not os.path.isdir(QEY_PATH):
         os.mkdir(CONFIG_PATH)
+    if not os.path.isdir(CONFIG_QEY_PATH):
+        os.mkdir(CONFIG_QEY_PATH)
     if not os.path.isfile(CONFIG_FILE):
         with open(CONFIG_FILE,'w',encoding='utf-8') as f:
             f.write('{"PATHS" : []}')
