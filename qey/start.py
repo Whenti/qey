@@ -17,40 +17,44 @@ def read_json(filename):
         data = {}
     return data
 
-def get_hotstrings():
-    PATHS = [CONFIG_QEY_PATH]
-    if os.path.isdir(CONFIG_PYQO_PATH):
-        PATHS.append(CONFIG_PYQO_PATH)
-    config_data = read_json(CONFIG_FILE)
-    if "PATHS" in config_data:
-        PATHS = PATHS + config_data["PATHS"]
+def add_json(file, hotstrings):
+    command = file[-6]
+    json_data = read_json(file)
+    for key, value in json_data.items():
+        hotstrings[command+HOTCHAR+key] = value.strip(whitespace_except_space)
 
+def add_ini(file, hotstrings):
+    with open(file, "r", encoding = 'utf-8') as f:
+        for line in f:
+            if line.strip()!="":
+                line_ = line.split(" ")
+                if line[0]!="[" and len(line_)>=2:
+                    string = (' '.join(line_[1:])).strip(whitespace_except_space)
+                    hotstrings[HOTCHAR+line_[0]]=string
+
+def get_hotstrings():
     pattern_json = re.compile('^.*json$')
     pattern_ini = re.compile('^.*ini$')
     HOTSTRINGS = {}
 
-    for PATH in PATHS:
-        files = os.listdir(PATH)
-        for file in files:
-            if file=="config.json":
-                continue
+    if os.path.isdir(CONFIG_PYQO_PATH):
+        JSON_FILES = []
+        JSON_FILES += [os.path.join(CONFIG_PYQO_PATH,file)
+            for file in os.listdir(CONFIG_PYQO_PATH)
+            if file!="config.json"]
+        if os.path.isfile(CONFIG_PYQO_FILE):
+            pyqo_config = read_json(CONFIG_PYQO_FILE)
+            JSON_FILES += list(pyqo_config.values())
 
-            #json files
-            if pattern_json.match(file):
-                command = file[:-5]
-                json_data = read_json(os.path.join(PATH,file))
-                for key, value in json_data.items():
-                    HOTSTRINGS[command+HOTCHAR+key] = value.strip(whitespace_except_space)
+        JSON_FILES = [file for file in JSON_FILES if pattern_json.match(file)]
+        for file in JSON_FILES:
+            add_json(file,HOTSTRINGS)
 
-            #ini files
-            if pattern_ini.match(file):
-                with open(os.path.join(PATH, file), "r", encoding = 'utf-8') as f:
-                    for line in f:
-                        if line.strip()!="":
-                            line_ = line.split(" ")
-                            if line[0]!="[" and len(line_)>=2:
-                                string = (' '.join(line_[1:])).strip(whitespace_except_space)
-                                HOTSTRINGS[HOTCHAR+line_[0]]=string
+    if os.path.isfile(CONFIG_FILE):
+        config_data = read_json(CONFIG_FILE)
+        if "INI_FILE" in config_data:
+            INI_FILE = config_data["INI_FILE"]
+            add_ini(INI_FILE, HOTSTRINGS)
 
     return HOTSTRINGS
 

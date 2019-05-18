@@ -1,6 +1,7 @@
-pyqo/__pycache__/
-*.pyc
-pyqo.egg-info
+__pycache__/
+qey.egg-info
+*.py[cod]
+qey.egg-info
 dist
 build
 .setup.py

@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# based on: https://github.com/cryzed/bin/blob/master/hotstrings
+
 import argparse
 import collections
 import json

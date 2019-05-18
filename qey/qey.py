@@ -7,28 +7,44 @@
 import click
 import os
 from .utils import *
-from .start import start, stop
+from .start import start as _start
+from .start import stop as _stop
 from .setstartup import setstartup
+from .json import *
 
-@click.command()
-@click.argument('arg', nargs=1)
-def main(arg):
-    """qey principal command."""
+if not os.path.isdir(CONFIG_PATH):
+    os.mkdir(CONFIG_PATH)
+if not os.path.isdir(CONFIG_QEY_PATH):
+    os.mkdir(CONFIG_QEY_PATH)
+if not os.path.isfile(CONFIG_FILE):
+    with open(CONFIG_FILE,'w',encoding='utf-8') as f:
+        f.write('{"INI_FILE" : ""}')
 
-    if not os.path.isdir(CONFIG_PATH):
-        os.mkdir(CONFIG_PATH)
-    if not os.path.isdir(CONFIG_QEY_PATH):
-        os.mkdir(CONFIG_QEY_PATH)
-    if not os.path.isfile(CONFIG_FILE):
-        with open(CONFIG_FILE,'w',encoding='utf-8') as f:
-            f.write('{"PATHS" : []}')
+@click.group()
+@click.pass_context
+def main(ctx):
+    pass
 
-    if arg=='startup':
-        setstartup()
-    elif arg=='start':
-        start()
-    elif arg=='stop':
-        stop()
+@main.command()
+def start():
+    """Start `qey`."""
+    _start()
+
+@main.command()
+def stop():
+    """Stop `qey`."""
+    _stop()
+
+@main.command()
+def setstartup():
+    """Make `qey` start on startup."""
+    setstartup()
+
+@main.command()
+@click.argument('filename', type=click.Path(exists=True), required=True)
+def setfile(filename):
+    """Set the INI file containing hotstrings."""
+    set_json(CONFIG_FILE, {"INI_FILE" : filename})
 
 if __name__ == "__main__":
     main()
