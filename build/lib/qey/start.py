@@ -4,6 +4,7 @@ import re
 import subprocess
 import string
 import json
+import psutil
 from .utils import *
 
 whitespace_except_space = string.whitespace.replace(" ", "")
@@ -20,7 +21,7 @@ def get_hotstrings():
     PATHS = [CONFIG_QEY_PATH]
     if os.path.isdir(CONFIG_PYQO_PATH):
         PATHS.append(CONFIG_PYQO_PATH)
-    config_data = read_json(os.path.join(CONFIG_QEY_PATH, 'config.json'))
+    config_data = read_json(CONFIG_FILE)
     if "PATHS" in config_data:
         PATHS = PATHS + config_data["PATHS"]
 
@@ -85,12 +86,20 @@ def start():
     if sys.platform in ['linux', 'linux2']:
         AUTOKEY_SIMPLE = os.path.join(CURRENT_PATH,"linux","autokey_simple.py")
         cmd = '{python} {autokey_simple} {file} &'.format(python = sys.executable, autokey_simple=AUTOKEY_SIMPLE, file=hotstring_file)
+        print(cmd)
         subprocess.call(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         #subprocess.call('start "" "{}"'.format(hotkeys),shell=True)
-        AUTOHOTKEY = os.path.join(CURRENT_PATH,"linux","AutoHotkey.exe")
+        AUTOHOTKEY = os.path.join(CURRENT_PATH,"windows","AutoHotkey.exe")
         cmd = 'start "{ahk}" "{file}"'.format(ahk = AUTOHOTKEY, file=hotstring_file)
         subprocess.call(cmd,shell=True)
+
+def stop():
+    for file in os.listdir(PIDS_PATH):
+        PID = int(file)
+        p = psutil.Process(PID)
+        p.terminate()
+        os.remove(os.path.join(PIDS_PATH,file))
 
 if __name__ == "__main__":
     start()

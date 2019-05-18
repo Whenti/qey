@@ -38,7 +38,6 @@ setup(
     url='https://github.com/Whenti/qey',
     packages = ['qey'],
     package_dir={'qey':'qey'},
-    package_data={'qey': ['qey/linux/*.py', 'qey/windows/*.exe']},
     include_package_data=True,
     install_requires=REQUIREMENTS,
     license='Apache License',
