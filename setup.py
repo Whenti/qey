@@ -12,10 +12,8 @@ from qey import __version__
 from qey import __author__
 from qey import __email__
 
-QEY_PATH = os.path.join(os.path.dirname(os.path.realpath(__file__)),'qey')
-
 #commande
-COMMANDE = ['{c}=qey.{c}:main'.format(c=command) for command in COMMANDS]
+SCRIPTS = ['qey=qey.qey:main']
 
 #requirements
 def requirements():
@@ -30,29 +28,27 @@ with open('README.md', 'r', encoding = 'utf-8') as f:
 
 #setup
 setup(
-    name='pyqo',
+    name='qey',
     version=__version__,
-    description='Useful collection of command line scripts.',
+    description='Simple multiplatform hotstring script.',
     long_description_content_type='text/markdown',
     long_description=README,
     author=__author__,
     author_email=__email__,
-    url='https://github.com/Whenti/pyqo',
-    packages = ['pyqo'],
-    package_data={'pyqo': ['data/*.json']},
-    package_dir={'pyqo':'pyqo'},
+    url='https://github.com/Whenti/qey',
+    packages = ['qey'],
+    package_dir={'qey':'qey'},
+    package_data={'qey': ['qey/linux/*.py', 'qey/windows/*.exe']},
     include_package_data=True,
     install_requires=REQUIREMENTS,
     license='Apache License',
     zip_safe=False,
-    keywords='pip requirements imports',
+    keywords='multiplatform hotstring',
     classifiers=[
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python :: 3.6',
     ],
-    scripts = SCRIPTS,
     entry_points={
-        'console_scripts': CONSOLE_SCRIPTS,
+        'console_scripts': SCRIPTS,
     },
 )
->>>>>>> oupsi
