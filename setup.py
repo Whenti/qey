@@ -13,11 +13,16 @@ from start import start
 HOME = os.path.expanduser("~")
 CONFIG_PATH = os.path.join(HOME,'.config')
 QEY_PATH = os.path.join(CONFIG_PATH,'qey')
+CONFIG_FILE = os.path.join(QEY_PATH,'config.json')
 
-if not os.path.isdir(QEY_PATH):
-    if not os.path.isdir(CONFIG_PATH):
-        os.mkdir(CONFIG_PATH)
+if not os.path.isdir(CONFIG_PATH):
     os.mkdir(QEY_PATH)
+if not os.path.isdir(QEY_PATH):
+    os.mkdir(CONFIG_PATH)
+if not os.path.isfile(CONFIG_FILE):
+    with open(CONFIG_FILE,'w',encoding='utf-8') as f:
+        f.write('{"PATHS" : []}')
+    
 
 if sys.platform in ['linux', 'linux2']:
     #make autokey start automatically
