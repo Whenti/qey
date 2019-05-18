@@ -1,3 +1,0 @@
-sudo apt-get install libdbus-1-dev libdbus-glib-1-dev
-sudo apt install gir1.2-appindicator3-0.1
-pip3 install autokey
