@@ -1,7 +1,6 @@
 __pycache__/
 qey.egg-info
 *.py[cod]
-qey.egg-info
 dist
 build
 .setup.py

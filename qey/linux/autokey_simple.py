@@ -26,9 +26,12 @@ if not os.path.isdir(PIDS_PATH):
     os.mkdir(PIDS_PATH)
 
 for file in os.listdir(PIDS_PATH):
-    PID = int(file)
-    p = psutil.Process(PID)
-    p.terminate()
+    try:
+        PID = int(file)
+        p = psutil.Process(PID)
+        p.terminate()
+    except:
+        os.remove(os.path.join(PIDS_PATH,file))
 
 os.mknod(MY_PID)
 

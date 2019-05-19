@@ -99,10 +99,12 @@ def start():
 
 def stop():
     for file in os.listdir(PIDS_PATH):
-        PID = int(file)
-        p = psutil.Process(PID)
-        p.terminate()
-        os.remove(os.path.join(PIDS_PATH,file))
+        try:
+            PID = int(file)
+            p = psutil.Process(PID)
+            p.terminate()
+        except:
+            os.remove(os.path.joind(PIDS_PATH,file))
 
 if __name__ == "__main__":
     start()
