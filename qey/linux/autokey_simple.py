@@ -22,9 +22,6 @@ HOME = os.path.expanduser("~")
 PIDS_PATH = os.path.join(HOME,'.config','qey','pids')
 MY_PID = os.path.join(PIDS_PATH, str(os.getpid()))
 
-if not os.path.isdir(PIDS_PATH):
-    os.mkdir(PIDS_PATH)
-
 for file in os.listdir(PIDS_PATH):
     try:
         PID = int(file)

@@ -1,5 +1,5 @@
 include README.md
 include LICENSE.md
 include requirements.txt
-include qey/windows/AutoHotkey.exe
-include qey/linux/autokey_simple.py
+include qey/windows/*
+include qey/linux/*

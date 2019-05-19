@@ -9,7 +9,7 @@ import os
 from .utils import *
 from .start import start as _start
 from .start import stop as _stop
-from .setstartup import setstartup
+from .setstartup import setstartup as _setstartup
 from .json import *
 
 if not os.path.isdir(CONFIG_PATH):
@@ -19,6 +19,8 @@ if not os.path.isdir(CONFIG_QEY_PATH):
 if not os.path.isfile(CONFIG_FILE):
     with open(CONFIG_FILE,'w',encoding='utf-8') as f:
         f.write('{"INI_FILE" : ""}')
+if not os.path.isdir(PIDS_PATH):
+    os.mkdir(PIDS_PATH)
 
 @click.group()
 @click.pass_context
@@ -36,15 +38,16 @@ def stop():
     _stop()
 
 @main.command()
-def setstartup():
+@click.option('--set/--unset', default=True)
+def startup(set):
     """Make `qey` start on startup."""
-    setstartup()
+    _setstartup(set)
 
 @main.command()
 @click.argument('filename', type=click.Path(exists=True), required=True)
 def setfile(filename):
     """Set the INI file containing hotstrings."""
-    set_json(CONFIG_FILE, {"INI_FILE" : filename})
+    set_json(CONFIG_FILE, {"INI_FILE" : os.path.abspath(filename)})
 
 if __name__ == "__main__":
     main()

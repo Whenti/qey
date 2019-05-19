@@ -42,6 +42,7 @@ def get_hotstrings():
         JSON_FILES += [os.path.join(CONFIG_PYQO_PATH,file)
             for file in os.listdir(CONFIG_PYQO_PATH)
             if file!="config.json"]
+            
         if os.path.isfile(CONFIG_PYQO_FILE):
             pyqo_config = read_json(CONFIG_PYQO_FILE)
             JSON_FILES += list(pyqo_config.values())
@@ -75,10 +76,12 @@ def write_hotstrings(hotstrings, hotstring_file):
             whotstrings[HOTCHAR+"day"] = "\nFormatTime, CurrentDateTime,, yyyy/MM/dd\nSendInput %CurrentDateTime%\nreturn"
             whotstrings[HOTCHAR+"hour"] = "\nFormatTime, CurrentDateTime,, HH:mm\nSendInput %CurrentDateTime%\nreturn"
             whotstrings[HOTCHAR+"time"] = "\nFormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm-ss\nSendInput %CurrentDateTime%\nreturn"
-            start_ahk_script = "\ufeff\n#SingleInstance force\n#Persistent\n#Hotstring EndChars ,?!`n `t\n#InputLevel, 1\n"
+            with open(os.path.join(CURRENT_PATH,"windows","header.ahk")) as f:
+                header_lines = f.readlines()
 
             with open(hotstring_file, 'w', encoding = 'utf-8') as f:
-                f.write(start_ahk_script)
+                for line in header_lines:
+                    f.write(line)
                 for key, value in whotstrings.items():
                     f.write(':oC?:{key}::{value}\n'.format(key=key,value=value))
 
@@ -103,8 +106,10 @@ def stop():
             PID = int(file)
             p = psutil.Process(PID)
             p.terminate()
+            if os.path.isfile(os.path.join(PIDS_PATH,file)):
+                os.remove(os.path.join(PIDS_PATH,file))
         except:
-            os.remove(os.path.joind(PIDS_PATH,file))
+            os.remove(os.path.join(PIDS_PATH,file))
 
 if __name__ == "__main__":
     start()
