@@ -19,7 +19,7 @@ or [download and extract the zip](https://github.com/Whenti/qey/archive/master.z
 $ python setup.py install
 ```
 
-Check the [documentation below](https://github.com/Whenti/pyqo#Documentation) to see what is available.
+Check the [documentation below](https://github.com/Whenti/qey#Documentation) to see what is available.
 
 ## Dependencies
 See the [requirements.txt](requirements.txt) file for details.
@@ -39,7 +39,7 @@ To set up `qey` with your custom hotkeys, you first of all need to write an INI 
 ```
 <hotstring> <replacement>
 ```
-where `<hotstring>` must not contain any space. Empty lines and lines between brackets will not be considered. If you have any trouble setting it up, please refert to the [example file](data_example.ini).
+where `<hotstring>` must not contain any space. Empty lines and lines between brackets will not be considered. If you have any trouble setting it up, please refer to the [example file](data_example.ini).
 
 You can associate this file with `qey` using
 ```
@@ -52,3 +52,20 @@ qey start
 to start it, and you are good to go. `qey` use the character `^` to distinguish hotstrings from other words. Type `^<hotstring>` filling `<hotstrings>` with one of your hotstrings, it should be automatically replaced by the provided words.
 
 With `qey startup`, you can make `qey` automatically run at startup. See `qey startup --help` for details.
+
+# `qey` compatibility
+
+`qey` has been specially designed to work in parallel with [`pyqo`](https://github.com/Whenti/pyqo). In particular, all variables defined through the commands `d`,`f`,`i` and `v` of `pyqo` are automatically accessible from `qey` with
+```
+<pyqo_command>^<name_of_variable>
+```
+
+## Example
+```
+$ # add a website to i
+$ i google -a https:\\www.google.com
+$ # restart qey so that it considers this modification
+$ qey start
+$ # now you can freely use the hotkey `i^google`
+$ #  instead of typing the whole url
+```
