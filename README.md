@@ -41,7 +41,7 @@ To set up `qey` with your custom hotkeys, you first of all need to write an INI 
 ```
 where `<hotstring>` must not contain any space. Empty lines and lines between brackets will not be considered. If you have any trouble setting it up, please refer to the [example file](data_example.ini).
 
-You can associate this file with `qey` using
+You can associate `qey` to this file using
 ```
 qey setfile <path>
 ```
@@ -49,13 +49,13 @@ and
 ```
 qey start
 ```
-to start it, and you are good to go. `qey` use the character `^` to distinguish hotstrings from other words. Type `^<hotstring>` filling `<hotstrings>` with one of your hotstrings, it should be automatically replaced by the provided words.
+to start it, and you are good to go. `qey` use the character `^` to distinguish hotstrings from other words. Type `^<hotstring>` filling `<hotstrings>` with one of your hotstrings, it should be automatically replaced by the provided replacement words.
 
 With `qey startup`, you can make `qey` automatically run at startup. See `qey startup --help` for details.
 
-# `qey` compatibility
+# `pyqo` compatibility
 
-`qey` has been specially designed to work in parallel with [`pyqo`](https://github.com/Whenti/pyqo). In particular, all variables defined through the commands `d`,`f`,`i` and `v` of `pyqo` are automatically accessible from `qey` with
+`qey` has been specially designed to be compatible with [`pyqo`](https://github.com/Whenti/pyqo). In particular, all variables defined through the commands `d`,`f`,`i` and `v` of `pyqo` are automatically accessible from `qey` with
 ```
 <pyqo_command>^<name_of_variable>
 ```
