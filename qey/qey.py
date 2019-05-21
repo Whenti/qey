@@ -38,9 +38,9 @@ def stop():
     _stop()
 
 @main.command()
-@click.option('--set/--unset', default=True)
+@click.option('--set/--unset', help='Flag to specify the action to be taken.', default=True)
 def startup(set):
-    """Make `qey` start on startup."""
+    """Enable/Disable automatic run at startup."""
     _setstartup(set)
 
 @main.command()

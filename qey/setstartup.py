@@ -38,4 +38,3 @@ def setstartup(set):
                 f.write("qey start")
         else:
             os.remove(START_FILE)
-        

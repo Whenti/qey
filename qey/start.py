@@ -42,7 +42,7 @@ def get_hotstrings():
         JSON_FILES += [os.path.join(CONFIG_PYQO_PATH,file)
             for file in os.listdir(CONFIG_PYQO_PATH)
             if file!="config.json"]
-            
+
         if os.path.isfile(CONFIG_PYQO_FILE):
             pyqo_config = read_json(CONFIG_PYQO_FILE)
             JSON_FILES += list(pyqo_config.values())
@@ -51,7 +51,7 @@ def get_hotstrings():
         for file in JSON_FILES:
             add_json(file,HOTSTRINGS)
 
-    if os.path.isfile(CONFIG_FILE):
+    if CONFIG_FILE!="" and os.path.isfile(CONFIG_FILE):
         config_data = read_json(CONFIG_FILE)
         if "INI_FILE" in config_data:
             INI_FILE = config_data["INI_FILE"]
