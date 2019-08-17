@@ -80,6 +80,7 @@ def write_hotstrings(hotstrings, hotstring_file):
                 header_lines = f.readlines()
 
             with open(hotstring_file, 'w', encoding = 'utf-8') as f:
+                f.write('\ufeff')
                 for line in header_lines:
                     f.write(line)
                 for key, value in whotstrings.items():
