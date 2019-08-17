@@ -73,9 +73,6 @@ def write_hotstrings(hotstrings, hotstring_file):
 
         else:
             whotstrings = hotstrings
-            whotstrings[HOTCHAR+"day"] = "\nFormatTime, CurrentDateTime,, yyyy/MM/dd\nSendInput %CurrentDateTime%\nreturn"
-            whotstrings[HOTCHAR+"hour"] = "\nFormatTime, CurrentDateTime,, HH:mm\nSendInput %CurrentDateTime%\nreturn"
-            whotstrings[HOTCHAR+"time"] = "\nFormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm-ss\nSendInput %CurrentDateTime%\nreturn"
             with open(os.path.join(CURRENT_PATH,"windows","header.ahk")) as f:
                 header_lines = f.readlines()
 
@@ -83,8 +80,18 @@ def write_hotstrings(hotstrings, hotstring_file):
                 f.write('\ufeff')
                 for line in header_lines:
                     f.write(line)
+                f.write(':oC?:day::\nFormatTime, CurrentDateTime,, yyyy/MM/dd\nSendInput %CurrentDateTime%\nreturn\n')
+                f.write(':oC?:hour::\nFormatTime, CurrentDateTime,, HH:mm\nSendInput %CurrentDateTime%\nreturn\n')
+                f.write(':oC?:time::\nFormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm-ss\nSendInput %CurrentDateTime%\nreturn\n')
+                
+                form = ':{param}:{key}::\nSendInput, {value}\nreturn\n'
+                
                 for key, value in whotstrings.items():
-                    f.write(':oC?:{key}::{value}\n'.format(key=key,value=value))
+                    if key[-1] == ':':
+                        for sep in [" ","`t","`n"]:
+                            f.write(form.format(key=key+sep, value=value, param="oC?*"))
+                    else:
+                        f.write(form.format(key=key,value=value,param="oC?"))
 
 def start():
     hotstrings = get_hotstrings()
