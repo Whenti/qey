@@ -95,12 +95,13 @@ def write_hotstrings(hotstrings, hotstring_file):
 
 def start():
     hotstrings = get_hotstrings()
-    hotstring_file = os.path.join(CONFIG_QEY_PATH, 'hotstrings.ahk')
+    hotstring_file = os.path.join(CONFIG_QEY_PATH, 'hotstrings')
     write_hotstrings(hotstrings, hotstring_file)
 
     if sys.platform in ['linux', 'linux2']:
         AUTOKEY_SIMPLE = os.path.join(CURRENT_PATH,"linux","autokey_simple.py")
         cmd = '{python} {autokey_simple} {file} &'.format(python = sys.executable, autokey_simple=AUTOKEY_SIMPLE, file=hotstring_file)
+        print(cmd)
         subprocess.call(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     else:
         #subprocess.call('start "" "{}"'.format(hotkeys),shell=True)
