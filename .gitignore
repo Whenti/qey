@@ -4,3 +4,5 @@ qey.egg-info
 dist
 build
 .setup.py
+*.pyc
+

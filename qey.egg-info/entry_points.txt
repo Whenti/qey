@@ -1,3 +1,0 @@
-[console_scripts]
-qey = qey.qey:main
-
