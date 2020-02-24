@@ -42,7 +42,7 @@ def get_hotstrings():
         JSON_FILES += [os.path.join(CONFIG_PYQO_PATH,file)
             for file in os.listdir(CONFIG_PYQO_PATH)
             if file!="config.json"]
-            
+
         if os.path.isfile(CONFIG_PYQO_FILE):
             pyqo_config = read_json(CONFIG_PYQO_FILE)
             JSON_FILES += list(pyqo_config.values())
@@ -51,7 +51,7 @@ def get_hotstrings():
         for file in JSON_FILES:
             add_json(file,HOTSTRINGS)
 
-    if os.path.isfile(CONFIG_FILE):
+    if CONFIG_FILE!="" and os.path.isfile(CONFIG_FILE):
         config_data = read_json(CONFIG_FILE)
         if "INI_FILE" in config_data:
             INI_FILE = config_data["INI_FILE"]
@@ -73,21 +73,29 @@ def write_hotstrings(hotstrings, hotstring_file):
 
         else:
             whotstrings = hotstrings
-            whotstrings[HOTCHAR+"day"] = "\nFormatTime, CurrentDateTime,, yyyy/MM/dd\nSendInput %CurrentDateTime%\nreturn"
-            whotstrings[HOTCHAR+"hour"] = "\nFormatTime, CurrentDateTime,, HH:mm\nSendInput %CurrentDateTime%\nreturn"
-            whotstrings[HOTCHAR+"time"] = "\nFormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm-ss\nSendInput %CurrentDateTime%\nreturn"
             with open(os.path.join(CURRENT_PATH,"windows","header.ahk")) as f:
                 header_lines = f.readlines()
 
             with open(hotstring_file, 'w', encoding = 'utf-8') as f:
+                f.write('\ufeff')
                 for line in header_lines:
                     f.write(line)
+                f.write(':oC?:day::\nFormatTime, CurrentDateTime,, yyyy/MM/dd\nSendInput %CurrentDateTime%\nreturn\n')
+                f.write(':oC?:hour::\nFormatTime, CurrentDateTime,, HH:mm\nSendInput %CurrentDateTime%\nreturn\n')
+                f.write(':oC?:time::\nFormatTime, CurrentDateTime,, yyyy-MM-dd_HH-mm-ss\nSendInput %CurrentDateTime%\nreturn\n')
+                
+                form = ':{param}:{key}::\nSendInput, {value}\nreturn\n'
+                
                 for key, value in whotstrings.items():
-                    f.write(':oC?:{key}::{value}\n'.format(key=key,value=value))
+                    if key[-1] == ':':
+                        for sep in [" ","`t","`n"]:
+                            f.write(form.format(key=key+sep, value=value, param="oC?*"))
+                    else:
+                        f.write(form.format(key=key,value=value,param="oC?"))
 
 def start():
     hotstrings = get_hotstrings()
-    hotstring_file = os.path.join(CONFIG_QEY_PATH, 'hotstrings.ahk')
+    hotstring_file = os.path.join(CONFIG_QEY_PATH, 'hotstrings')
     write_hotstrings(hotstrings, hotstring_file)
 
     if sys.platform in ['linux', 'linux2']:

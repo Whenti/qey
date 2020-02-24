@@ -38,12 +38,6 @@ def stop():
     _stop()
 
 @main.command()
-@click.option('--set/--unset', default=True)
-def startup(set):
-    """Make `qey` start on startup."""
-    _setstartup(set)
-
-@main.command()
 @click.argument('filename', type=click.Path(exists=True), required=True)
 def setfile(filename):
     """Set the INI file containing hotstrings."""

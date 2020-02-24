@@ -1,4 +1,4 @@
-﻿#SingleInstance force
+#SingleInstance force
 #Persistent
 #Hotstring EndChars ,?!`n `t
 #InputLevel, 1
