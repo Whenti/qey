@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # based on: https://github.com/cryzed/bin/blob/master/hotstrings
 
+import atexit
 import argparse
 import collections
 import json
@@ -9,7 +10,6 @@ import signal
 import subprocess
 import sys
 import psutil
-from datetime import datetime
 
 import Xlib
 import Xlib.X
@@ -18,8 +18,9 @@ import Xlib.display
 import Xlib.ext.record
 import Xlib.protocol
 
+
 HOME = os.path.expanduser("~")
-PIDS_PATH = os.path.join(HOME,'.config','qey','pids')
+PIDS_PATH = os.path.join(HOME, '.config', 'qey', 'pids')
 MY_PID = os.path.join(PIDS_PATH, str(os.getpid()))
 
 for file in os.listdir(PIDS_PATH):
@@ -27,15 +28,16 @@ for file in os.listdir(PIDS_PATH):
         PID = int(file)
         p = psutil.Process(PID)
         p.terminate()
-    except:
+    except Exception as e:
         os.remove(os.path.join(PIDS_PATH,file))
 
 os.mknod(MY_PID)
 
+
 def remove_pidfile():
     os.remove(MY_PID)
 
-import atexit
+
 atexit.register(remove_pidfile)
 
 EXIT_FAILURE = 1
@@ -60,17 +62,18 @@ Xlib.XK.load_keysym_group('xkb')
 event_field = Xlib.protocol.rq.EventField(None)
 
 
-def getClipboardData():
+def get_clipboard_data():
     p = subprocess.Popen(['xclip','-selection', 'clipboard', '-o'], stdout=subprocess.PIPE)
-    retcode = p.wait()
+    p.wait()
     data = p.stdout.read()
     return data
 
-def setClipboardData(data):
+
+def set_clipboard_data(data):
     p = subprocess.Popen(['xclip','-selection','clipboard'], stdin=subprocess.PIPE)
     p.stdin.write(data)
     p.stdin.close()
-    retcode = p.wait()
+    p.wait()
 
 
 def parse_event_fields(data, display):
@@ -150,9 +153,11 @@ class RecordHandler:
             else:
                 self.key_released(event)
 
+
 def verbose(*args, **kwargs):
     if arguments.verbose:
         print(*args, **kwargs)
+
 
 class HotstringProcessor:
     BACKSPACE_CHARACTER = '\x08'
@@ -173,14 +178,14 @@ class HotstringProcessor:
         self._default_key_release_event_arguments = self._default_key_press_event_arguments
 
     def make_key_press_event(self, detail, state, window, **kwargs):
-        arguments = self._default_key_press_event_arguments.copy()
-        arguments.update(kwargs)
-        return Xlib.protocol.event.KeyPress(detail=detail, state=state, window=window, **arguments)
+        args = self._default_key_press_event_arguments.copy()
+        args.update(kwargs)
+        return Xlib.protocol.event.KeyPress(detail=detail, state=state, window=window, **args)
 
     def make_key_release_event(self, detail, state, window, **kwargs):
-        arguments = self._default_key_release_event_arguments.copy()
-        arguments.update(kwargs)
-        return Xlib.protocol.event.KeyRelease(detail=detail, state=state, window=window, **arguments)
+        args = self._default_key_release_event_arguments.copy()
+        args.update(kwargs)
+        return Xlib.protocol.event.KeyRelease(detail=detail, state=state, window=window, **args)
 
     def string_to_keycodes(self, string_):
         for character in string_:
@@ -216,28 +221,27 @@ class HotstringProcessor:
         queue_string = ''.join(self.queue)
         backspace = tuple(self.string_to_keycodes(self.BACKSPACE_CHARACTER))
         window = self.connection.get_input_focus().focus
-        for hotstring, (action, *arguments) in self.hotstrings.items():
+        for hotstring, (action, *args) in self.hotstrings.items():
             if not queue_string.endswith(hotstring+self.SPACE_CHARACTER):
                 continue
 
             if action == 'replace':
-                replacement = arguments[0]
+                replacement = args[0]
             elif action == 'run':
-                replacement = eval(arguments[0])
+                replacement = eval(args[0])
             else:
                 verbose('Unrecognized action: %r.' % action)
                 continue
 
-            clipboard = getClipboardData()
-            setClipboardData(replacement.encode())
+            clipboard = get_clipboard_data()
+            set_clipboard_data(replacement.encode())
 
             self.type_keycodes(backspace * (len(hotstring)+1), window)
             self.type_keycodes([self.CTRL_V], window)
             self.queue.clear()
 
             # Reset clipboard
-            #setClipboardData(clipboard)
-
+            set_clipboard_data(clipboard)
             return
 
 
@@ -252,8 +256,8 @@ def main():
     if not record_connection.has_extension('RECORD'):
         argument_parser.exit(EXIT_FAILURE, 'X Record Extension Library not found.\n')
 
-    with open(path) as file:
-        hotstrings = json.load(file)
+    with open(path) as f:
+        hotstrings = json.load(f)
 
     if not hotstrings:
         argument_parser.exit(EXIT_FAILURE, 'No hotstrings defined.\n')

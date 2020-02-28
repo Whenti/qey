@@ -7,7 +7,7 @@ Fully compatible with :
 - **Windows** 7 and higher.
 - **Linux** distributions running under the X Window System.
 
-Requires `Python 3`. Tested on `Python 3.6`.
+Requires `Python 3.0` or higher.
 
 ## Usage
 You can clone the repository:
@@ -21,9 +21,6 @@ $ python setup.py install
 
 Check the [documentation below](https://github.com/Whenti/qey#Documentation) to see what is available.
 
-## Dependencies
-See the [requirements.txt](requirements.txt) file for details.
-
 ## Author
 
 * **Quentin LÉVÊQUE** - [Whenti](https://github.com/Whenti)
@@ -33,39 +30,36 @@ This project is proudly licensed under the MIT License - see the [LICENSE.md](LI
 
 # Documentation
 
-After installing this package, you will have the command `qey` at your disposal. You may use `qey --help` for help.
+Run
+```
+$ qey start
+```
+and you're already good to go! Type `^cat` to see it in action. More generally, you can type `^<hotstring>` filling `<hotstring>` with one of the defined hotstrings.
 
-To set up `qey` with your custom hotkeys, you first of all need to write an INI file describing the desired hotstrings. More precisely, each line of the file must have the following format :
+To set up `qey` with your custom hotstrings, you can either run
 ```
-<hotstring> <replacement>
+$ qey edit
 ```
-where `<hotstring>` must not contain any space. Empty lines and lines between brackets will not be considered. If you have any trouble setting it up, please refer to the [example file](data_example.ini).
+to edit the hotstring file, or run
+```
+$ qey set_file <new_file>
+```
+to set your own hotstring file.
 
-You can associate `qey` to this file using
-```
-qey setfile <path>
-```
-and
-```
-qey start
-```
-to start it, and you are good to go. `qey` use the character `^` to distinguish hotstrings from other words. Type `^<hotstring>` filling `<hotstrings>` with one of your hotstrings, it should be automatically replaced by the provided replacement words.
+## Hotstring file format
 
-With `qey startup`, you can make `qey` automatically run at startup. See `qey startup --help` for details.
+The hotstring file consists in an INI file where the key and the values are separated with a whitespace. Empty lines and lines starting with `[` are ignored. If you have any trouble setting it up, please refer to the [example file](hotstring_file_example.ini).
 
 # `pyqo` compatibility
 
-`qey` has been specially designed to be compatible with [`pyqo`](https://github.com/Whenti/pyqo). In particular, all variables defined through the commands `d`,`f`,`i` and `v` of `pyqo` are automatically accessible from `qey` with
+`qey` has been specially designed to be compatible with [`pyqo`](https://github.com/Whenti/pyqo). In particular, all variables defined through the `pyqo` commands automatically define hotstrings with the following format:
 ```
-<pyqo_command>^<name_of_variable>
+<pyqo_command>^<variable_name>
 ```
 
 ## Example
 ```
 $ # add a website to i
 $ i google -a https:\\www.google.com
-$ # restart qey so that it considers this modification
-$ qey start
 $ # now you can freely use the hotkey `i^google`
-$ #  instead of typing the whole url
 ```
