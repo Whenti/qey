@@ -10,6 +10,7 @@ import subprocess
 import psutil
 from qey.json_handling import read_json, write_json
 from qey.hotkeys_handling import write_hotstrings, get_hotstrings
+from qey.os_detection import is_linux
 
 WELCOME_MESSAGE = """
 Welcome to the wonderful world of                          
@@ -51,17 +52,17 @@ def start():
     """Start `qey`."""
     hotstrings = get_hotstrings(CONFIG_FILE, HOTCHAR)
     hotstring_file = os.path.join(CONFIG_QEY_PATH, 'hotstrings')
-    extention = '.ahk' if sys.platform not in ['linux', 'linux2'] else ''
+    extention = '.ahk' if not is_linux() else ''
     hotstring_file += extention
 
     write_hotstrings(hotstrings, hotstring_file, HOTCHAR)
-    if sys.platform in ['linux', 'linux2']:
+    if is_linux():
         hotstring_executor = os.path.join(CURRENT_PATH, "linux", "autokey_simple.py")
         cmd = '{python} {hotstring_executor} {file} &'
         cmd = cmd.format(python=sys.executable, hotstring_executor=hotstring_executor, file=hotstring_file)
     else:
         hotstring_executor = os.path.join(CURRENT_PATH, "windows", "AutoHotkey.exe")
-        cmd = 'start "{hotstring_executor}" "{file}"'.format(hotstring_executor=hotstring_executor, file=hotstring_file)
+        cmd = 'cmd.exe /C start "{hotstring_executor}" "{file}"'.format(hotstring_executor=hotstring_executor, file=hotstring_file)
     subprocess.call(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
 
@@ -83,7 +84,7 @@ def edit():
     data = read_json(CONFIG_FILE)
     ini_file = data.get("INI_FILE", None)
     if ini_file is not None:
-        cmd = 'xdg-open {}' if sys.platform in ['linux', 'linux2'] else 'start "" "{}"'
+        cmd = 'xdg-open {}' if is_linux() else 'cmd.exe /C start "" "{}"'
         subprocess.call(cmd.format(ini_file), shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.DEVNULL)
 
 
