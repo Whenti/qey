@@ -2,7 +2,6 @@
 #Persistent
 #Hotstring EndChars ,?!`n `t
 #InputLevel, 1
-#NoTrayIcon
 
 PID:=DllCall("GetCurrentProcessId")
 SplitPath, A_Desktop,,HOME

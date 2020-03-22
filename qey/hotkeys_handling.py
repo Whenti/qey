@@ -86,9 +86,9 @@ def write_hotstrings(hotstrings: Dict[str, str], hotstring_file: str, hot_char: 
             f.write('\ufeff')
             for line in header_lines:
                 f.write(line)
-            f.write(':oC?:day::\nFormatTime, CurrentDateTime,, yyyy/MM/dd\nSendInput %CurrentDateTime%\nreturn\n')
-            f.write(':oC?:hour::\nFormatTime, CurrentDateTime,, HH:mm\nSendInput %CurrentDateTime%\nreturn\n')
-            f.write(':oC?:time::\nFormatTime, CurrentDateTime,,' +
+            f.write(':oC?:^day::\nFormatTime, CurrentDateTime,, yyyy/MM/dd\nSendInput %CurrentDateTime%\nreturn\n')
+            f.write(':oC?:^hour::\nFormatTime, CurrentDateTime,, HH:mm\nSendInput %CurrentDateTime%\nreturn\n')
+            f.write(':oC?:^time::\nFormatTime, CurrentDateTime,,' +
                     'yyyy-MM-dd_HH-mm-ss\nSendInput %CurrentDateTime%\nreturn\n')
 
             form = ':{param}:{key}::\nSendInput, {value}\nreturn\n'
